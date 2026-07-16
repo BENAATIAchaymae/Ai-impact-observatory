@@ -1,24 +1,14 @@
 """
 ETAPE 1 — Concevoir et opérer le baromètre
 ================================================
-Mission : "Concevoir et opérer les baromètres annuels ou semestriels auprès
-des entreprises partenaires et de leurs écosystèmes."
-
-Le questionnaire et le plan d'échantillonnage sont déjà figés dans
-data/questionnaire.py (conception méthodologique déclarée AVANT collecte).
-Ce script simule le déploiement du baromètre sur 2 vagues semestrielles
-(S1 et S2), ce qui permet un vrai suivi longitudinal — pas juste une photo
-à un instant T.
-
-Pourquoi simuler : ce baromètre est un INSTRUMENT ORIGINAL de l'Observatoire,
-pas encore déployé — il n'existe par définition aucune vraie donnée à
-récupérer. La simulation ici sert à valider le dispositif avant un vrai
-terrain (comme un pilote/pré-test), ce qui est une pratique de recherche
-standard, pas un pis-aller.
+Mission :
+Concevoir et opérer les baromètres annuels ou semestriels auprès
+des entreprises partenaires et de leurs écosystèmes.
 """
 
 import random
 import sys
+
 from pathlib import Path
 
 import pandas as pd
@@ -110,12 +100,15 @@ if __name__ == "__main__":
     df_vague2 = pd.DataFrame(vague2)
 
     df_toutes_vagues = pd.concat([df_vague1, df_vague2], ignore_index=True)
+
+    
     df_toutes_vagues.to_csv(DATA_DIR / "barometre_2_vagues.csv", index=False)
 
     print(f"[OK] Vague 1 (S1) : {len(df_vague1)} répondants déployés selon quotas :")
     print(df_vague1["taille_entreprise"].value_counts().to_string())
     print(f"\n[OK] Vague 2 (S2) : {len(df_vague2)} répondants suivis "
           f"(taux de réponse au suivi : {taux_reponse_v2:.0%})")
+    
     print(f"\n[OK] Fichier consolidé -> {DATA_DIR / 'barometre_2_vagues.csv'}")
     print(f"\nMaturité moyenne V1 : {df_vague1['score_maturite_ia'].mean():.2f} / 5")
     print(f"Maturité moyenne V2 : {df_vague2['score_maturite_ia'].mean():.2f} / 5 (même panel, 6 mois après)")
