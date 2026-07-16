@@ -1,14 +1,6 @@
 """
 ETAPE 2 — Analyse critique et croisement méthodologique
-============================================================
-Ce n'est pas juste "afficher les chiffres" : le vrai travail de recherche
-consiste à identifier ce que les deux sources permettent — ou ne permettent
-pas — de conclure ensemble, étant donné qu'elles ne couvrent pas le même
-périmètre d'entreprises.
 
-C'est exactement la compétence "esprit critique et réflexivité sur les
-biais, limites [...] de l'IA" et "rigueur méthodologique" demandée dans
-l'offre visée — appliquée ici aux données elles-mêmes, pas seulement à l'IA.
 """
 
 import json
@@ -41,8 +33,7 @@ for secteur in secteurs_communs:
     })
 
 # ---------------------------------------------------------------------------
-# 2. Croissance relative de l'adoption (les deux sources s'accordent-elles
-#    sur la DYNAMIQUE, même si le NIVEAU diffère à cause du périmètre ?)
+# 2. Croissance relative de l'adoption 
 # ---------------------------------------------------------------------------
 croissance = []
 for source in df_evolution["source"].unique():
