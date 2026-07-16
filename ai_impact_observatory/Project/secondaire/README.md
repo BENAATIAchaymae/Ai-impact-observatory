@@ -1,8 +1,7 @@
 # AI Impact Observatory — Démo "données primaires" (sources réelles)
 
 Pipeline utilisant de **vraies données officielles publiées** (pas de
-synthétique), avec Pandas pour le traitement et Plotly pour la restitution —
-les deux outils cités dans ta présentation (slides 3 et 5).
+synthétique), avec Pandas pour le traitement et Plotly pour la restitution.
 
 ## Sources utilisées
 
