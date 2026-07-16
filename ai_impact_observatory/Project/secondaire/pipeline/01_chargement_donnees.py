@@ -1,13 +1,10 @@
 """
 ETAPE 1 — Chargement et structuration (Pandas)
-==================================================
-Transforme les agrégats officiels (dict Python en dur, cf. data/sources_reelles.py)
-en DataFrames Pandas propres, avec la source et le périmètre attachés à chaque
-ligne — pour ne jamais perdre la traçabilité methodologique pendant l'analyse.
 """
 
 import json
 import sys
+
 from pathlib import Path
 
 import pandas as pd
