@@ -1,9 +1,5 @@
 """
 ETAPE 3 — Production des livrables
-=====================================
-Génère la Flash Note (Markdown) et injecte les indicateurs réels dans le
-template du dashboard (Plotly.js, chargé via CDN — le calcul des données
-est fait en Python/Pandas, le rendu graphique en Plotly côté navigateur).
 """
 
 import json
@@ -53,10 +49,6 @@ disponibles, malgré des périmètres différents :
 - **France Num (TPE/PME)** : {secteur_top_fn['secteur']} ({secteur_top_fn['taux_adoption_ia_pct']}%)
 - **Insee (entreprises 10+ salariés)** : {secteur_top_insee['secteur']} ({secteur_top_insee['taux_adoption_ia_pct']}%)
 
-Les deux enquêtes convergent sur un même constat : les secteurs du
-numérique / de l'information-communication sont largement en tête de
-l'adoption de l'IA, loin devant les secteurs plus traditionnels
-(agriculture, hébergement-restauration, construction).
 
 ## 3. Écart de maturité par taille d'entreprise (Insee)
 
@@ -78,16 +70,6 @@ change fortement le niveau mesuré, même sur un intitulé de secteur identique.
 
 ## 5. Recommandation pour le prochain baromètre de l'Observatoire
 
-Documenter systématiquement le périmètre exact (taille, secteur, année)
-de toute source secondaire mobilisée, et éviter les comparaisons brutes
-de niveaux entre enquêtes à périmètres différents — comparer plutôt les
-**dynamiques** (taux de croissance, hiérarchie sectorielle), qui sont
-plus robustes aux différences de champ.
-
----
-*Note générée automatiquement à partir d'agrégats officiels publiés —
-démonstration technique. Pas de micro-données individuelles utilisées
-(voir README pour le détail de cette limitation).*
 """
 
 flash_note_path = OUTPUT_DIR / "flash_note.md"
