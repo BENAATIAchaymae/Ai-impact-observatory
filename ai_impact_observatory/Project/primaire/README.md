@@ -63,7 +63,7 @@ Le point le plus fort à mettre en avant : **la cohérence entre quantitatif
 et qualitatif sur le même panel**. La maturité IA progresse de +0.28 point
 en 6 mois (mesure quantitative), et le thème qui recule le plus dans les
 verbatims d'entretien sur la même période est justement "Preuve de valeur
-(ROI)" — les deux se confirment mutuellement, ce qui est exactement l'intérêt
+(ROI)" ,les deux se confirment mutuellement, ce qui est exactement l'intérêt
 d'articuler quanti et quali plutôt que de les traiter en silos.
 
 ## Lancer la démo
