@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>AI Impact Observatory — Données secondaires</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  :root{
+    --bg: #0E141C; --surface: #161E29; --line: #2A3644;
+    --gold: #E8B84B; --blue: #6C93E8; --text: #ECEEF2; --text-muted: #8B96A6;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{ background: var(--bg); color: var(--text); font-family:'Inter', sans-serif; line-height:1.5; -webkit-font-smoothing:antialiased;}
+  .eyebrow{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color: var(--gold);}
+  h1,h2,h3{ font-family:'Fraunces', serif; font-weight:500; letter-spacing:-0.01em;}
+  header{ padding:28px 40px; border-bottom:1px solid var(--line); display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:16px;}
+  header .brand{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--text-muted); letter-spacing:0.08em;}
+  header h1{ font-size:26px; margin-top:4px;}
+  header .meta{ text-align:right; font-size:12px; color:var(--text-muted); font-family:'IBM Plex Mono', monospace;}
+  .wrap{ max-width:1200px; margin:0 auto; padding:0 40px 80px;}
+  section{ padding:40px 0; border-bottom:1px solid var(--line);}
+  section:last-of-type{ border-bottom:none;}
+  section h3{ font-size:18px; margin-bottom:6px;}
+  .subtitle{ color:var(--text-muted); font-size:13.5px; margin-bottom:20px;}
+  .grid-2{ display:grid; grid-template-columns:1fr 1fr; gap:28px;}
+  .card{ background:var(--surface); border:1px solid var(--line); padding:20px;}
+  .card h4{ font-family:'IBM Plex Mono', monospace; font-size:11px; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-muted); margin-bottom:12px; font-weight:500;}
+  .kpi-row{ display:flex; gap:36px; flex-wrap:wrap; padding:24px 0;}
+  .kpi .n{ font-family:'IBM Plex Mono', monospace; font-size:26px; color:var(--gold);}
+  .kpi .l{ font-size:11px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.06em; margin-top:4px;}
+  .note-box{ background:var(--surface); border-left:3px solid var(--gold); padding:16px 20px; font-size:13.5px; color:var(--text-muted); margin-top:16px;}
+  .note-box b{ color:var(--text); }
+  .source-tag{ font-family:'IBM Plex Mono', monospace; font-size:10.5px; color:var(--blue); text-transform:uppercase; letter-spacing:0.05em;}
+  footer{ padding:32px 40px; text-align:center; color:var(--text-muted); font-size:12px; font-family:'IBM Plex Mono', monospace;}
+  @media (max-width:860px){ .grid-2{grid-template-columns:1fr;} .wrap{padding:0 20px 60px;} header{padding:20px;} }
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="brand">INSTITUT DE RECHERCHE IA</div>
+    <h1>AI Impact Observatory — Données secondaires</h1>
+  </div>
+  <div class="meta">Sources réelles croisées<br/>France Num 2025 (DGE/CREDOC) · Insee 2024</div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <div class="eyebrow">Vue d'ensemble</div>
+    <h3>L'adoption de l'IA double en un an, quelle que soit la source</h3>
+    <div class="subtitle" id="notemethodo"></div>
+    <div id="chartEvolution" style="height:340px;"></div>
+    <div class="note-box" id="noteBox"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Par secteur</div>
+    <h3>Des écarts sectoriels marqués, sur les deux sources</h3>
+    <div class="subtitle">Chaque source garde son propre périmètre d'entreprises — voir note méthodologique.</div>
+    <div class="grid-2">
+      <div class="card">
+        <h4><span class="source-tag">France Num 2025</span> · TPE/PME 0-249 sal.</h4>
+        <div id="chartSecteurFN" style="height:300px;"></div>
+      </div>
+      <div class="card">
+        <h4><span class="source-tag">Insee 2024</span> · Entreprises 10+ sal.</h4>
+        <div id="chartSecteurInsee" style="height:300px;"></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Par taille d'entreprise (Insee)</div>
+    <h3>Un écart de maturité qui croît avec la taille</h3>
+    <div id="chartTaille" style="height:300px;"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Analyse critique</div>
+    <h3>Le seul secteur comparable entre les deux sources</h3>
+    <div class="subtitle">Hébergement-restauration est le seul intitulé de secteur présent dans les deux enquêtes.</div>
+    <div id="chartComparaison" style="height:260px;"></div>
+  </section>
+
+</div>
+
+<footer>Sources : Baromètre France Num 2025 (DGE/CREDOC, francenum.gouv.fr) · Enquête TIC Entreprises 2024 (Insee) — Démonstration technique</footer>
+
+<script>
+const DATA = {"sources": {"france_num": {"nom": "Baromètre France Num 2025 (DGE/CREDOC)", "perimetre": "TPE/PME françaises, 0-249 salariés", "echantillon": 11021}, "insee": {"nom": "Enquête TIC Entreprises 2024 (Insee)", "perimetre": "Entreprises françaises 10+ salariés"}}, "evolution_globale": [{"source": "France Num", "annee_debut": 2024, "annee_fin": 2025, "taux_debut_pct": 13.0, "taux_fin_pct": 26.0, "multiplicateur": 2.0}, {"source": "Insee", "annee_debut": 2023, "annee_fin": 2024, "taux_debut_pct": 6.0, "taux_fin_pct": 10.0, "multiplicateur": 1.67}], "adoption_par_secteur": [{"source": "France Num 2025", "perimetre": "TPE/PME 0-249 sal.", "secteur": "Numérique (NTIC)", "taux_adoption_ia_pct": 51.0, "evolution": "+11 pts"}, {"source": "France Num 2025", "perimetre": "TPE/PME 0-249 sal.", "secteur": "Services spécialisés & techniques", "taux_adoption_ia_pct": 41.0, "evolution": "+19 pts"}, {"source": "France Num 2025", "perimetre": "TPE/PME 0-249 sal.", "secteur": "Services à la personne", "taux_adoption_ia_pct": 29.0, "evolution": "x3,2"}, {"source": "France Num 2025", "perimetre": "TPE/PME 0-249 sal.", "secteur": "Hébergement-restauration", "taux_adoption_ia_pct": 20.0, "evolution": "x2,5"}, {"source": "France Num 2025", "perimetre": "TPE/PME 0-249 sal.", "secteur": "Industrie agro-alimentaire", "taux_adoption_ia_pct": 15.0, "evolution": "x2,5"}, {"source": "France Num 2025", "perimetre": "TPE/PME 0-249 sal.", "secteur": "Agriculture", "taux_adoption_ia_pct": 9.0, "evolution": "x2,3"}, {"source": "Insee 2024", "perimetre": "Entreprises 10+ sal.", "secteur": "Information & communication", "taux_adoption_ia_pct": 42.0, "evolution": "+12 pts"}, {"source": "Insee 2024", "perimetre": "Entreprises 10+ sal.", "secteur": "Act. spécialisées, scientifiques, techniques", "taux_adoption_ia_pct": 17.0, "evolution": NaN}, {"source": "Insee 2024", "perimetre": "Entreprises 10+ sal.", "secteur": "Commerce", "taux_adoption_ia_pct": 10.0, "evolution": "x2,5 (vs 4% en 2023)"}, {"source": "Insee 2024", "perimetre": "Entreprises 10+ sal.", "secteur": "Activités immobilières", "taux_adoption_ia_pct": 14.0, "evolution": "vs 7% en 2023"}, {"source": "Insee 2024", "perimetre": "Entreprises 10+ sal.", "secteur": "Transport & entreposage", "taux_adoption_ia_pct": 5.0, "evolution": NaN}, {"source": "Insee 2024", "perimetre": "Entreprises 10+ sal.", "secteur": "Hébergement-restauration", "taux_adoption_ia_pct": 5.0, "evolution": NaN}, {"source": "Insee 2024", "perimetre": "Entreprises 10+ sal.", "secteur": "Construction", "taux_adoption_ia_pct": 3.0, "evolution": NaN}], "adoption_par_taille": [{"source": "Insee 2024", "taille": "< 50 salariés", "taux_adoption_ia_pct": 9.0}, {"source": "Insee 2024", "taille": "50-249 salariés", "taux_adoption_ia_pct": 15.0}, {"source": "Insee 2024", "taille": "250 salariés ou plus", "taux_adoption_ia_pct": 33.0}], "secteurs_comparables_deux_sources": [{"secteur": "Hébergement-restauration", "taux_france_num_pct": 20.0, "taux_insee_pct": 5.0, "ecart_points": 15.0}], "ecart_maturite_taille_points": 24.0, "note_methodologique": "France Num (0-249 salariés, taux 2025 plus élevés) et Insee (10+ salariés uniquement, taux 2024 plus bas) ne couvrent pas le même périmètre d'entreprises et portent sur des années différentes (2025 vs 2024) : les niveaux ne sont donc pas directement comparables. En revanche, les deux sources s'accordent sur la DYNAMIQUE : doublement de l'adoption de l'IA en un an, et sur-représentation du secteur Numérique / Information-Communication en tête des usages."};
+
+const gold = '#E8B84B', blue = '#6C93E8', line = '#2A3644', txt = '#ECEEF2', muted='#8B96A6';
+// Fonction plutôt qu'objet unique : Plotly modifie l'objet layout qu'on lui passe,
+// donc chaque graphique doit recevoir sa PROPRE copie (sinon les axes se "polluent" entre graphiques).
+function newLayoutBase() {
+  return {
+    paper_bgcolor: 'transparent', plot_bgcolor: 'transparent',
+    font: { color: muted, family: 'Inter, sans-serif', size: 11 },
+    margin: { t: 10, r: 20, b: 40, l: 50 },
+    xaxis: { gridcolor: line, zerolinecolor: line },
+    yaxis: { gridcolor: line, zerolinecolor: line },
+  };
+}
+
+document.getElementById('notemethodo').textContent =
+  "Deux enquêtes officielles, périmètres différents (voir note ci-dessous).";
+document.getElementById('noteBox').innerHTML = "<b>Note méthodologique — </b>" + DATA.note_methodologique;
+
+// --- Évolution globale (deux sources, deux lignes) ---
+const evoFN = DATA.evolution_globale.find(d => d.source === "France Num");
+const evoInsee = DATA.evolution_globale.find(d => d.source === "Insee");
+Plotly.newPlot('chartEvolution', [
+  {
+    x: [evoFN.annee_debut, evoFN.annee_fin], y: [evoFN.taux_debut_pct, evoFN.taux_fin_pct],
+    name: 'France Num (TPE/PME 0-249 sal.)', mode: 'lines+markers',
+    line: { color: gold, width: 3 }, marker: { size: 10 }
+  },
+  {
+    x: [evoInsee.annee_debut, evoInsee.annee_fin], y: [evoInsee.taux_debut_pct, evoInsee.taux_fin_pct],
+    name: 'Insee (10+ sal.)', mode: 'lines+markers',
+    line: { color: blue, width: 3 }, marker: { size: 10 }
+  }
+], { ...newLayoutBase(), yaxis: { ...newLayoutBase().yaxis, title: '% entreprises utilisant l\'IA' },
+     legend: { orientation: 'h', y: -0.2, font: { color: txt } } },
+   { displayModeBar: false, responsive: true });
+
+// --- Secteur France Num ---
+const secteursFN = DATA.adoption_par_secteur.filter(d => d.source === "France Num 2025").sort((a,b)=>a.taux_adoption_ia_pct-b.taux_adoption_ia_pct);
+Plotly.newPlot('chartSecteurFN', [{
+  y: secteursFN.map(d => d.secteur), x: secteursFN.map(d => d.taux_adoption_ia_pct),
+  type: 'bar', orientation: 'h', marker: { color: gold }
+}], { ...newLayoutBase(), margin: { t:10, r:20, b:30, l:210 } }, { displayModeBar: false, responsive: true });
+
+// --- Secteur Insee ---
+const secteursInsee = DATA.adoption_par_secteur.filter(d => d.source === "Insee 2024").sort((a,b)=>a.taux_adoption_ia_pct-b.taux_adoption_ia_pct);
+Plotly.newPlot('chartSecteurInsee', [{
+  y: secteursInsee.map(d => d.secteur), x: secteursInsee.map(d => d.taux_adoption_ia_pct),
+  type: 'bar', orientation: 'h', marker: { color: blue }
+}], { ...newLayoutBase(), margin: { t:10, r:20, b:30, l:230 } }, { displayModeBar: false, responsive: true });
+
+// --- Taille ---
+Plotly.newPlot('chartTaille', [{
+  x: DATA.adoption_par_taille.map(d => d.taille), y: DATA.adoption_par_taille.map(d => d.taux_adoption_ia_pct),
+  type: 'bar', marker: { color: gold }
+}], { ...newLayoutBase(), yaxis: { ...newLayoutBase().yaxis, title: '% entreprises utilisant l\'IA' } },
+   { displayModeBar: false, responsive: true });
+
+// --- Comparaison secteur commun ---
+const comp = DATA.secteurs_comparables_deux_sources;
+Plotly.newPlot('chartComparaison', [
+  { x: comp.map(d => d.secteur), y: comp.map(d => d.taux_france_num_pct), name: 'France Num', type: 'bar', marker: { color: gold } },
+  { x: comp.map(d => d.secteur), y: comp.map(d => d.taux_insee_pct), name: 'Insee', type: 'bar', marker: { color: blue } }
+], { ...newLayoutBase(), yaxis: { ...newLayoutBase().yaxis, title: '% adoption IA' },
+     legend: { orientation: 'h', y: -0.2, font: { color: txt } } },
+   { displayModeBar: false, responsive: true });
+</script>
+
+</body>
+</html>

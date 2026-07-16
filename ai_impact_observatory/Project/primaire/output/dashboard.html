@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Baromètre AI Impact Observatory</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+<style>
+  :root{ --bg:#0E141C; --surface:#161E29; --line:#2A3644; --gold:#E8B84B; --blue:#6C93E8; --text:#ECEEF2; --muted:#8B96A6;}
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  .eyebrow{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);}
+  h1,h2,h3{font-family:'Fraunces',serif;font-weight:500;letter-spacing:-.01em;}
+  header{padding:28px 40px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:16px;}
+  header .brand{font-family:'IBM Plex Mono',monospace;font-size:13px;color:var(--muted);letter-spacing:.08em;}
+  header h1{font-size:26px;margin-top:4px;}
+  header .meta{text-align:right;font-size:12px;color:var(--muted);font-family:'IBM Plex Mono',monospace;}
+  .wrap{max-width:1200px;margin:0 auto;padding:0 40px 80px;}
+  section{padding:36px 0;border-bottom:1px solid var(--line);}
+  section:last-of-type{border-bottom:none;}
+  section h3{font-size:18px;margin-bottom:6px;}
+  .subtitle{color:var(--muted);font-size:13.5px;margin-bottom:18px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:28px;}
+  .card{background:var(--surface);border:1px solid var(--line);padding:20px;}
+  .card h4{font-family:'IBM Plex Mono',monospace;font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:12px;font-weight:500;}
+  .kpi-row{display:flex;gap:36px;flex-wrap:wrap;padding:20px 0;}
+  .kpi .n{font-family:'IBM Plex Mono',monospace;font-size:26px;color:var(--gold);}
+  .kpi .l{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-top:4px;}
+  .note-box{background:var(--surface);border-left:3px solid var(--gold);padding:16px 20px;font-size:13.5px;color:var(--muted);margin-top:14px;}
+  .note-box b{color:var(--text);}
+  .verbatim{background:var(--surface);border:1px solid var(--line);padding:16px 18px;margin-bottom:12px;}
+  .verbatim .tag{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--blue);text-transform:uppercase;letter-spacing:.06em;}
+  .verbatim p{font-size:13.5px;font-style:italic;margin-top:6px;color:var(--text);}
+  footer{padding:32px 40px;text-align:center;color:var(--muted);font-size:12px;font-family:'IBM Plex Mono',monospace;}
+  @media (max-width:860px){.grid-2{grid-template-columns:1fr;}.wrap{padding:0 20px 60px;}header{padding:20px;}}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="brand">INSTITUT DE RECHERCHE IA</div>
+    <h1>Baromètre AI Impact Observatory</h1>
+  </div>
+  <div class="meta">Instrument original · Panel de partenaires<br/>2 vagues (S1 → S2, +6 mois)</div>
+</header>
+
+<div class="wrap">
+
+  <section>
+    <div class="eyebrow">Suivi longitudinal</div>
+    <h3>La maturité IA progresse sur le panel suivi</h3>
+    <div class="kpi-row" id="kpiRow"></div>
+    <div id="chartProgression" style="height:300px;"></div>
+    <div class="note-box" id="noteEchantillon"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Résultats par profil</div>
+    <h3>Maturité IA (vague 1) par taille et par secteur</h3>
+    <div class="grid-2">
+      <div class="card"><h4>Par taille d'entreprise</h4><div id="chartTaille" style="height:260px;"></div></div>
+      <div class="card"><h4>Par secteur</h4><div id="chartSecteur" style="height:260px;"></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Études de cas qualitatives</div>
+    <h3>Trajectoires obstacle → solution (T0 vs T0+6 mois)</h3>
+    <div class="subtitle">Codage thématique automatisé sur verbatims d'entretien — grille définie a priori.</div>
+    <div id="chartThemes" style="height:280px;"></div>
+    <div id="verbatims" style="margin-top:20px;"></div>
+  </section>
+
+  <section>
+    <div class="eyebrow">Qualité méthodologique</div>
+    <h3>Contrôle qualité et représentativité de l'échantillon</h3>
+    <div id="qualiteBox"></div>
+  </section>
+
+</div>
+
+<footer>Instrument original — données simulées (baromètre non encore déployé) — Démonstration technique</footer>
+
+<script>
+const DATA = {"maturite_v1": 2.69, "maturite_v2": 2.91, "progression_moyenne_panel_suivi": 0.28, "n_panel_suivi": 66, "maturite_par_taille": {"ETI (250-4999 sal.)": 2.79, "Grand groupe (5000+ sal.)": 3.72, "PME (10-249 sal.)": 1.96}, "maturite_par_secteur": {"Banque & Assurance": 3.0, "Conseil": 3.01, "Industrie": 2.48, "Public": 2.66, "Retail": 2.69, "Santé": 1.91, "Énergie": 2.9}, "obstacle_principal": "Budget limité", "qualitatif": {"n_etudes_de_cas": 12, "grille_thematique": ["Montée en compétences", "Gouvernance des données", "Résistance au changement", "Preuve de valeur (ROI)", "Dépendance fournisseur"], "frequence_themes_t0_obstacles": {"Montée en compétences": 3, "Preuve de valeur (ROI)": 6, "Gouvernance des données": 2, "Résistance au changement": 2, "Dépendance fournisseur": 2}, "frequence_themes_t1_solutions": {"Montée en compétences": 3, "Preuve de valeur (ROI)": 3, "Gouvernance des données": 2, "Résistance au changement": 2, "Dépendance fournisseur": 2}}, "qualite_methodologique": {"controle_qualite": {"n_lignes_avant": 146, "n_lignes_rejetees": 0, "n_lignes_conservees": 146, "detail_problemes": {"maturite_hors_bornes": 0, "budget_negatif": 0, "doublons_panel_vague": 0, "incoherence_usage_sans_type_ia": 0}}, "representativite": {"repartition_cible_pct": {"PME (10-249 sal.)": 40.0, "ETI (250-4999 sal.)": 35.0, "Grand groupe (5000+ sal.)": 25.0}, "repartition_reelle_pct": {"PME (10-249 sal.)": 40.0, "ETI (250-4999 sal.)": 35.0, "Grand groupe (5000+ sal.)": 25.0}, "ecarts_points": {"PME (10-249 sal.)": 0.0, "ETI (250-4999 sal.)": 0.0, "Grand groupe (5000+ sal.)": 0.0}, "conforme": true}, "reproductibilite": {"version_questionnaire": "v1.0 — gelé avant collecte (data/questionnaire.py)", "seed_simulation": 42, "regle_de_non_modification": "Aucune reformulation de question autorisée en cours de collecte. Toute évolution du questionnaire donne lieu à une nouvelle version documentée (v1.1, v2.0) avec table de correspondance, comme le fait France Num d'une année sur l'autre.", "code_source_versionne": "Pipeline scripté (pas de traitement manuel Excel) — rejouable à l'identique."}}};
+const gold='#E8B84B', blue='#6C93E8', line='#2A3644', txt='#ECEEF2', muted='#8B96A6';
+const layoutBase = {
+  paper_bgcolor:'transparent', plot_bgcolor:'transparent',
+  font:{color:muted, family:'Inter, sans-serif', size:11},
+  margin:{t:10,r:20,b:40,l:50},
+  xaxis:{gridcolor:line, zerolinecolor:line}, yaxis:{gridcolor:line, zerolinecolor:line},
+};
+
+document.getElementById('kpiRow').innerHTML = `
+  <div class="kpi"><div class="n">${DATA.maturite_v1}/5</div><div class="l">Maturité S1</div></div>
+  <div class="kpi"><div class="n">${DATA.maturite_v2}/5</div><div class="l">Maturité S2 (+6 mois)</div></div>
+  <div class="kpi"><div class="n">${DATA.progression_moyenne_panel_suivi > 0 ? '+' : ''}${DATA.progression_moyenne_panel_suivi}</div><div class="l">Progression moyenne (panel suivi, n=${DATA.n_panel_suivi})</div></div>
+  <div class="kpi"><div class="n">${DATA.obstacle_principal}</div><div class="l">Obstacle n°1</div></div>
+`;
+
+document.getElementById('noteEchantillon').innerHTML =
+  "<b>Note méthodologique — </b>Panel de partenaires (échantillon de convenance), " +
+  "pas représentatif de la population nationale des entreprises. La progression mesurée " +
+  "porte sur le MÊME panel interrogé 2 fois (mesure longitudinale), pas sur deux échantillons distincts.";
+
+Plotly.newPlot('chartProgression', [{
+  x: ['S1', 'S2 (+6 mois)'], y: [DATA.maturite_v1, DATA.maturite_v2],
+  mode:'lines+markers', line:{color:gold,width:3}, marker:{size:12}
+}], {...layoutBase, yaxis:{...layoutBase.yaxis, range:[1,5], title:'Maturité IA / 5'}}, {displayModeBar:false, responsive:true});
+
+const taille = Object.entries(DATA.maturite_par_taille);
+Plotly.newPlot('chartTaille', [{
+  y: taille.map(d=>d[0]), x: taille.map(d=>d[1]), type:'bar', orientation:'h', marker:{color:gold}
+}], {...layoutBase, margin:{t:10,r:20,b:30,l:170}}, {displayModeBar:false, responsive:true});
+
+const secteur = Object.entries(DATA.maturite_par_secteur).sort((a,b)=>a[1]-b[1]);
+Plotly.newPlot('chartSecteur', [{
+  y: secteur.map(d=>d[0]), x: secteur.map(d=>d[1]), type:'bar', orientation:'h', marker:{color:blue}
+}], {...layoutBase, margin:{t:10,r:20,b:30,l:150}}, {displayModeBar:false, responsive:true});
+
+const themesT0 = DATA.qualitatif.frequence_themes_t0_obstacles;
+const themesT1 = DATA.qualitatif.frequence_themes_t1_solutions;
+const themesLabels = Object.keys(themesT0);
+Plotly.newPlot('chartThemes', [
+  {x: themesLabels, y: themesLabels.map(t=>themesT0[t]||0), name:'T0 (obstacles)', type:'bar', marker:{color:gold}},
+  {x: themesLabels, y: themesLabels.map(t=>themesT1[t]||0), name:'T0+6 mois', type:'bar', marker:{color:blue}}
+], {...layoutBase, legend:{orientation:'h', y:-0.3, font:{color:txt}}}, {displayModeBar:false, responsive:true});
+
+const verbatimsDiv = document.getElementById('verbatims');
+DATA.qualitatif && (DATA.qualitatif.n_etudes_de_cas) && (() => {
+  verbatimsDiv.innerHTML = '<p style="color:var(--muted);font-size:12px;">Exemple illustratif de trajectoire (1 entreprise du panel qualitatif) — verbatims synthétiques.</p>';
+})();
+
+const qm = DATA.qualite_methodologique;
+document.getElementById('qualiteBox').innerHTML = `
+  <div class="grid-2">
+    <div class="card">
+      <h4>Contrôle qualité des données</h4>
+      <p style="font-size:13px;color:var(--muted);">
+        ${qm.controle_qualite.n_lignes_conservees} / ${qm.controle_qualite.n_lignes_avant} lignes conservées
+        (${qm.controle_qualite.n_lignes_rejetees} rejetées : bornes, doublons, cohérence interne)
+      </p>
+    </div>
+    <div class="card">
+      <h4>Représentativité vs quotas déclarés</h4>
+      <p style="font-size:13px;color:var(--muted);">
+        Conforme aux quotas : <b style="color:var(--gold);">${qm.representativite.conforme ? 'Oui' : 'Non'}</b>
+      </p>
+    </div>
+  </div>
+`;
+</script>
+
+</body>
+</html>
