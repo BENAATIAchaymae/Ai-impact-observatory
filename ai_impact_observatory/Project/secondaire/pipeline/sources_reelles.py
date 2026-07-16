@@ -1,33 +1,5 @@
 """
 Données primaires — sources réelles et sourcées
-===================================================
-Ces données sont des AGRÉGATS OFFICIELS DÉJÀ PUBLIÉS (pas de micro-données
-individuelles — voir README pour l'explication : accès bloqué par robots.txt
-sur data.economie.gouv.fr / data.gouv.fr depuis un environnement automatisé).
-
-Chaque valeur ci-dessous est vérifiable à sa source. Aucune valeur n'est
-inventée ou extrapolée sans le dire explicitement.
-
-SOURCE 1 — Baromètre France Num 2025
-  Producteur : Direction Générale des Entreprises (DGE) / CREDOC
-  Champ : TPE et PME françaises (0 à 249 salariés)
-  Échantillon : 11 021 entreprises répondantes (3 043 PME + 7 978 TPE)
-  Publication : 15 septembre 2025
-  URL : https://www.francenum.gouv.fr/barometre-france-num
-
-SOURCE 2 — Enquête TIC Entreprises 2024 (Insee)
-  Producteur : Insee
-  Champ : entreprises françaises de 10 salariés ou plus
-         (hors secteurs agricole, financier, assurance)
-  Publication : Insee Première n°2061, juillet 2025
-  URL : https://www.insee.fr/fr/statistiques/8616837
-
-ATTENTION — Point méthodologique important à souligner en entretien :
-Les deux sources ne couvrent PAS le même périmètre d'entreprises
-(TPE/PME 0-249 salariés vs entreprises 10+ salariés). Les taux ne sont
-donc pas directement comparables terme à terme — c'est un vrai exemple
-de la vigilance méthodologique attendue par l'offre visée ("rigueur
-méthodologique", "esprit critique sur les biais et limites").
 """
 
 DONNEES_FRANCE_NUM_2025 = {
