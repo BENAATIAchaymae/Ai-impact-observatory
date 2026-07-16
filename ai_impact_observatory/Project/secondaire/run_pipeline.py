@@ -1,7 +1,6 @@
 """
 Pipeline complet — Données primaires (sources réelles)
 ==========================================================
-Exécute les 3 étapes dans l'ordre :
   1. Chargement & structuration Pandas   -> 01_chargement_donnees.py
   2. Analyse critique croisée            -> 02_analyse_croisee.py
   3. Production des livrables            -> 03_generer_livrables.py
