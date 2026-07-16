@@ -1,10 +1,5 @@
 """
 ETAPE 4 — Analyse croisée et production des livrables
-==========================================================
-Combine le quantitatif (2 vagues du baromètre, validées par le contrôle
-qualité) et le qualitatif (études de cas codées) pour produire la Flash
-Note et le dashboard — répond à "articuler approches quantitatives et
-qualitatives" (profil recherché) autant qu'à "produire des livrables".
 """
 
 import json
@@ -112,18 +107,11 @@ même panel.
 - **Reproductibilité** : questionnaire versionné, seed de simulation fixée,
   pipeline scripté rejouable à l'identique.
 
----
-*Note générée automatiquement — démonstration technique. Instrument de
-recherche original (baromètre + études de cas), données simulées car non
-encore déployé (voir README).*
-"""
 
 (OUTPUT_DIR / "flash_note.md").write_text(flash_note, encoding="utf-8")
 print(f"[OK] Flash Note générée -> {OUTPUT_DIR / 'flash_note.md'}")
 
-# ---------------------------------------------------------------------------
-# Dashboard (Plotly.js via CDN, cf. démo précédente)
-# ---------------------------------------------------------------------------
+
 template_path = BASE_DIR / "dashboard_template.html"
 if template_path.exists():
     template = template_path.read_text(encoding="utf-8")
