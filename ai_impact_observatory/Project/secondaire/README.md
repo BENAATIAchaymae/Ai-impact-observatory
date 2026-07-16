@@ -14,27 +14,6 @@ les deux outils cités dans ta présentation (slides 3 et 5).
 Toutes les valeurs viennent de communiqués et pages officielles publiés
 (francenum.gouv.fr, insee.fr) — vérifiables indépendamment.
 
-## ⚠️ Pourquoi des agrégats et pas des micro-données brutes
-
-J'ai essayé de télécharger le fichier CSV brut (une ligne par entreprise
-répondante) directement depuis `data.economie.gouv.fr` et son miroir
-`data.gouv.fr`. **Les deux bloquent l'accès automatisé via leur fichier
-`robots.txt`** — testé et confirmé (erreur `ROBOTS_DISALLOWED` sur plusieurs
-URLs de téléchargement direct). Mon environnement d'exécution Python n'a par
-ailleurs aucun accès réseau.
-
-**Solution retenue :** utiliser les résultats déjà publiés (chiffres agrégés
-par secteur/taille/année, communiqués officiels) plutôt que d'inventer des
-micro-données synthétiques. C'est moins riche qu'un vrai fichier ligne par
-ligne, mais **100% réel et vérifiable** — contrairement à la démo précédente
-(données secondaires) qui utilisait un corpus simulé.
-
-**Si le jury demande pourquoi pas les micro-données :** "Le fichier existe et
-est en open data, mais son téléchargement automatisé est bloqué par le
-site — en conditions réelles au poste, je passerais par un téléchargement
-manuel ponctuel (autorisé, ce n'est qu'un blocage anti-bot) ou une demande
-d'accès à l'API auprès de la DGE."
-
 ## Structure
 
 ```
@@ -62,9 +41,6 @@ concrètement : sur le seul secteur présent dans les deux enquêtes
 (hébergement-restauration), l'écart atteint **15 points** (20% vs 5%) —
 uniquement à cause de la différence de champ d'échantillonnage.
 
-C'est exactement la compétence "esprit critique et réflexivité sur les
-biais, limites [...]" et "rigueur méthodologique" demandée dans l'offre —
-démontrée sur un vrai cas, pas juste affirmée sur une slide.
 
 ## Lancer la démo
 
@@ -72,10 +48,3 @@ démontrée sur un vrai cas, pas juste affirmée sur une slide.
 python run_pipeline.py
 # puis ouvrir output/dashboard.html dans un navigateur
 ```
-
-Note technique : Plotly Python n'a pas pu être installé dans cet
-environnement (sandbox sans accès réseau pour `pip`). Le dashboard utilise
-donc **Plotly.js via CDN** — Pandas calcule les données côté Python, Plotly
-les affiche côté navigateur. C'est un pattern de production courant
-(API/backend qui sert du JSON à un frontend Plotly.js), pas une solution
-de contournement.
