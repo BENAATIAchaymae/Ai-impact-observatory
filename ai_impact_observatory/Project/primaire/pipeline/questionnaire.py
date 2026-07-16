@@ -1,10 +1,7 @@
 """
 Le questionnaire du "Baromètre AI Impact Observatory" — instrument original
 ================================================================================
-Ceci est la conception méthodologique elle-même (mission : "Contribuer à la
-conception méthodologique des dispositifs d'enquête"). Chaque question a une
-justification de recherche, pas juste un intitulé.
-
+Note:
 Structure inspirée des standards de baromètres d'adoption technologique
 (type France Num, Insee TIC) mais conçue spécifiquement pour le besoin de
 l'Observatoire : mesurer la MATURITÉ, pas seulement l'usage binaire.
@@ -78,11 +75,6 @@ QUESTIONNAIRE = [
     },
 ]
 
-# ---------------------------------------------------------------------------
-# Méthodologie d'échantillonnage (déclarée avant collecte — bonne pratique
-# de reproductibilité : le plan d'échantillonnage ne doit jamais être
-# ajusté après avoir vu les résultats)
-# ---------------------------------------------------------------------------
 PLAN_ECHANTILLONNAGE = {
     "population_cible": "Entreprises partenaires de l'école et de son écosystème (Chaire IA, réseau alumni entreprises, partenaires corporate)",
     "methode": "Échantillonnage stratifié par quotas (secteur x taille), non probabiliste (panel de partenaires, pas de base de sondage aléatoire disponible)",
