@@ -4,16 +4,10 @@ ETAPE 2 — Études de cas qualitatives longitudinales
 Mission : "Mener des études de cas qualitatives longitudinales en entreprise
 (trajectoires, obstacles, solutions déployées)" + "Contribuer à la conception
 méthodologique des dispositifs d'enquête et à leur automatisation par l'IA."
-
-Simule des entretiens semi-directifs menés à 2 reprises (T0 et T0+6 mois)
-auprès d'un sous-échantillon d'entreprises ayant accepté le suivi qualitatif
-(Q9 du questionnaire). Le codage thématique des verbatims est automatisé
-par un classifieur simple — ce qui répond explicitement à "automatisation
-par l'IA" des dispositifs d'enquête, tout en gardant le codage vérifiable
-(pas une boîte noire).
 """
 
 import json
+
 import random
 from pathlib import Path
 
