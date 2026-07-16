@@ -24,4 +24,4 @@ Simulates an original barometer: a questionnaire deployed twice (6 months apart)
 - `flash_note.md` — generated summary
 
 ## Requirements
-Python 3, `pandas`. No external data downloads — everything runs offline.
+Python 3, `pandas`. No external data downloads.
