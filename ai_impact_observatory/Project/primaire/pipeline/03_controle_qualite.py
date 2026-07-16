@@ -1,19 +1,11 @@
 """
 ETAPE 3 — Garantir la qualité, la robustesse méthodologique et la
              reproductibilité des travaux
-=====================================================================
-C'est un point de la mission 2 à part entière, souvent négligé dans les
-démos techniques — donc volontairement isolé ici plutôt que noyé dans le
-script de collecte.
-
-Trois familles de contrôles :
-1. Qualité des données (validité, doublons, cohérence interne)
-2. Robustesse méthodologique (représentativité de l'échantillon vs quotas déclarés)
-3. Reproductibilité (traçabilité de la version du questionnaire et des seeds)
 """
 
 import json
 import sys
+
 from pathlib import Path
 
 import pandas as pd
@@ -115,5 +107,6 @@ if __name__ == "__main__":
     print(json.dumps(rapport_qualite, ensure_ascii=False, indent=2))
     print("\n[OK] Contrôle de représentativité (échantillon vs quotas déclarés) :")
     print(json.dumps(rapport_repr, ensure_ascii=False, indent=2))
+  
     print("\n[OK] Rapport de reproductibilité :")
     print(json.dumps(rapport_repro, ensure_ascii=False, indent=2))
